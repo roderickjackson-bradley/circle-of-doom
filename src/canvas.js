@@ -8,7 +8,6 @@ canvas.height = innerHeight;
 
 
 // Variables
-var ball;
 
 // Event Listeners
 
@@ -21,13 +20,30 @@ addEventListener('resize', () => {
 })
 
 // Objects
-function Ball(x, y, radius, color) {
+function Ball(x, y, dy, radius, color) {
     this.x = x;
     this.y = y;
+    this.dy = dy;
     this.radius = radius;
     this.color = color;
 
     this.update = function() {
+        
+        /* If Ball object's "y" vector plus the Ball object's radius
+         * is Greater than the height of the canvas
+         */
+        if (this.y + this.radius > canvas.height) {
+        
+        /* Make "y's" change of position equal the inverse of it's self.
+         * The inverse represents the change of direction the ball will go once it hits the floor
+         */ 
+            this.dy = -this.dy * 0.9;
+        } else {
+            this.dy += 1;
+        }
+
+        //Gives adds a unit everytime the ball moves on y-axis
+        this.y += this.dy;
         this.draw();
     }
 
@@ -41,12 +57,13 @@ function Ball(x, y, radius, color) {
 }
 
 
+var ball;
 
 // Implementation
 function init() {
     // Creating a new instance of the ball object.
     // I'm passng some paramaters that tells the object where to start at, how big I want the object, and what color.
-    ball = new Ball(canvas.width / 2, canvas.height / 2, 45, "blue");
+    ball = new Ball(canvas.width / 2, canvas.height / 2, 2, 45, "blue");
 
 }
 
