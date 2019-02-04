@@ -108,18 +108,11 @@ var c = canvas.getContext('2d');
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-var mouse = {
-    x: innerWidth / 2,
-    y: innerHeight / 2
-};
-
-var colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66'];
+// Variables
+var ball;
 
 // Event Listeners
-addEventListener('mousemove', function (event) {
-    mouse.x = event.clientX;
-    mouse.y = event.clientY;
-});
+
 
 addEventListener('resize', function () {
     canvas.width = innerWidth;
@@ -129,33 +122,30 @@ addEventListener('resize', function () {
 });
 
 // Objects
-function Object(x, y, radius, color) {
+function Ball(x, y, radius, color) {
     this.x = x;
     this.y = y;
     this.radius = radius;
     this.color = color;
+
+    this.update = function () {
+        this.draw();
+    };
+
+    this.draw = function () {
+        c.beginPath();
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        c.fillStyle = this.color;
+        c.fill();
+        c.closePath();
+    };
 }
 
-Object.prototype.draw = function () {
-    c.beginPath();
-    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    c.fillStyle = this.color;
-    c.fill();
-    c.closePath();
-};
-
-Object.prototype.update = function () {
-    this.draw();
-};
-
 // Implementation
-var objects = void 0;
 function init() {
-    objects = [];
-
-    for (var i = 0; i < 400; i++) {
-        // objects.push();
-    }
+    // Creating a new instance of the ball object.
+    // I'm passng some paramaters that tells the object where to start at, how big I want the object, and what color.
+    ball = new Ball(canvas.width / 2, canvas.height / 2, 45, "blue");
 }
 
 // Animation Loop
@@ -163,10 +153,10 @@ function animate() {
     requestAnimationFrame(animate);
     c.clearRect(0, 0, canvas.width, canvas.height);
 
-    c.fillText('HTML CANVAS BOILERPLATE', mouse.x, mouse.y);
     // objects.forEach(object => {
     //  object.update();
     // });
+    ball.update();
 }
 
 init();
