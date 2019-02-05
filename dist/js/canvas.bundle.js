@@ -109,7 +109,9 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 // Variables
-
+var ball;
+var gravity = 1;
+var friction = 0.9;
 // Event Listeners
 
 
@@ -140,7 +142,7 @@ function Ball(x, y, dy, radius, color) {
              */
             this.dy = -this.dy * 0.9;
         } else {
-            this.dy += 1;
+            this.dy += gravity;
         }
 
         //Gives adds a unit everytime the ball moves on y-axis
@@ -156,8 +158,6 @@ function Ball(x, y, dy, radius, color) {
         c.closePath();
     };
 }
-
-var ball;
 
 // Implementation
 function init() {
