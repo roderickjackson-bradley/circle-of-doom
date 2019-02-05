@@ -108,8 +108,10 @@ var c = canvas.getContext('2d');
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
+var colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66'];
+
 // Variables
-var ball;
+var squareGravity = 4;
 var gravity = 1;
 var friction = 0.9;
 var rightPressed = false;
@@ -152,6 +154,7 @@ addEventListener('resize', function () {
 });
 
 // Objects
+
 function Ball(x, y, dy, radius, color) {
     this.x = x;
     this.y = y;
@@ -159,6 +162,7 @@ function Ball(x, y, dy, radius, color) {
     this.radius = radius;
     this.color = color;
 
+    // Update function
     this.update = function () {
 
         /* If Ball object's "y" vector plus the Ball object's radius
@@ -174,11 +178,18 @@ function Ball(x, y, dy, radius, color) {
             this.dy += gravity;
         }
 
+        // if (this.x + this.radius > canvas.width) {
+        //     this.dx = -this.dx * 0.2;
+        // } else {
+        //     this.dx -= 1;
+        // }
+
         //Gives adds a unit everytime the ball moves on y-axis
         this.y += this.dy;
         this.draw();
     };
 
+    // Draw function
     this.draw = function () {
         c.beginPath();
         c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
@@ -199,11 +210,41 @@ function Ball(x, y, dy, radius, color) {
     };
 }
 
+function Square(x, y, dy, swidth, sheight) {
+    this.x = x;
+    this.y = y;
+    this.dy = dy;
+    this.swidth = swidth;
+    this.sheight = sheight;
+
+    this.update = function () {
+        if (this.y + this.swidth + this.sheight > canvas.height) {
+            this.dy = -this.dy;
+        } else {
+            this.dy++;
+        }
+        //Gives adds a unit everytime the ball moves on y-axis
+        this.y += this.dy;
+        this.draw();
+    };
+
+    this.draw = function () {
+        c.beginPath();
+        c.fillRect(this.x, this.y, this.dy, this.swidth, this.sheight);
+        c.fillStyle = this.color;
+        c.fill();
+        c.closePath();
+    };
+}
+
+var ball = new Ball(canvas.width / 2, canvas.height / 2, 2, 40, 'blue');
+var squares = new Square(canvas.width / 5, canvas.height / 10, 1, 55, 55);
+
 // Implementation
 function init() {
-    // Creating a new instance of the ball object.
-    // I'm passng some paramaters that tells the object where to start at, how big I want the object, and what color.
-    ball = new Ball(canvas.width / 2, canvas.height / 2, 2, 45, "blue");
+
+    ball;
+    squares;
 }
 
 // Animation Loop
@@ -211,12 +252,8 @@ function animate() {
     requestAnimationFrame(animate);
     c.clearRect(0, 0, canvas.width, canvas.height);
 
-    // objects.forEach(object => {
-    //  object.update();
-    // });
+    squares.update();
 
-    // I'm calling my ball.move function here in the game loop and before ball.update() 
-    // So that my movements can be updated after I've called them.
     ball.move();
     ball.update();
 }
