@@ -112,8 +112,37 @@ canvas.height = innerHeight;
 var ball;
 var gravity = 1;
 var friction = 0.9;
+var rightPressed = false;
+var leftPressed = false;
+var upPressed = false;
+
 // Event Listeners
 
+/* Adding event listners for left, right, and up arrow keys.
+ * I have to include what happens when a key is pushed and 
+ * what happens when a key is not pushed(up)
+ */
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+
+function keyDownHandler(e) {
+    if (e.key == "Right" || e.key == "ArrowRight") {
+        rightPressed = true;
+    } else if (e.key == "Left" || e.key == "ArrowLeft") {
+        leftPressed = true;
+    } else if (e.key == "Up" || e.key == "ArrowUp") {
+        upPressed = true;
+    }
+}
+function keyUpHandler(e) {
+    if (e.key == "Right" || e.key == "ArrowRight") {
+        rightPressed = false;
+    } else if (e.key == "Left" || e.key == "ArrowLeft") {
+        leftPressed = false;
+    } else if (e.key == "Up" || e.key == "ArrowUp") {
+        upPressed = false;
+    }
+}
 
 addEventListener('resize', function () {
     canvas.width = innerWidth;
@@ -157,6 +186,17 @@ function Ball(x, y, dy, radius, color) {
         c.fill();
         c.closePath();
     };
+    // I'm placing this here so that the ball obect can have the ability to move
+    // I want all ball obects to have the ability to move or be user controlled
+    this.move = function () {
+        if (rightPressed) {
+            this.x += 7;
+        } else if (leftPressed) {
+            this.x -= 7;
+        } else if (upPressed) {
+            this.y -= 7;
+        }
+    };
 }
 
 // Implementation
@@ -174,6 +214,10 @@ function animate() {
     // objects.forEach(object => {
     //  object.update();
     // });
+
+    // I'm calling my ball.move function here in the game loop and before ball.update() 
+    // So that my movements can be updated after I've called them.
+    ball.move();
     ball.update();
 }
 
